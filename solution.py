@@ -25,7 +25,7 @@ def webServer(port=13331):
             #Fill in start
             connectionSocket.send(bytes('HTTP/1.1 200 OK\r\n\r\n', 'UTF-8'))
 
-            connectionSocket.send(bytes(outputdata + '\r\n\r\n', 'UTF-8'))
+            connectionSocket.send(bytes(outputdata, 'UTF-8'))
 
             #Fill in end
 
@@ -38,9 +38,9 @@ def webServer(port=13331):
         except IOError:
             #Send response message for file not found (404)
             #Fill in start
-            connectionSocket.send(bytes('HTTP/1.1 400 NOT FOUND\r\n\r\n', 'UTF-8'))
-            err404 = "HTTP/1.1 400 NOT FOUND"
-            connectionSocket.send(err404.encode())
+            connectionSocket.send(bytes('404 NOT FOUND\r\n\r\n', 'UTF-8'))
+            #err404 = "HTTP/1.1 400 NOT FOUND"
+            #connectionSocket.send(err404.encode())
 
             #Fill in end
 
