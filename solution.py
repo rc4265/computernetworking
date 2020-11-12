@@ -143,10 +143,16 @@ def ping(host, timeout=1):
     avg = round((sum(delayArr)/len(delayArr)*1000),2)
     dev = round((stdev(delayArr)*1000),2)
 
+    vars = [str(minDelay), str(avg), str(maxDelay), str(dev)]
+    #vars = [str(round(minDelay), 2)), str(round(delayArr*1000, 2)), str(round(delayArr*1000, 2)),str(round(stdev(delayArr*1000), 2))]
 
     print("\n---", host, "ping statistics ---")
     print(PACKETS,"packets transmitted,",(PACKETS-lostPkt), "packets received,", str(percentLost)+"%", "packet loss")
-    print("round-trip min/avg/max/stddev = " + str(minDelay) + "/" + str(avg) + "/" + str(maxDelay) + "/" + str(dev) + " ms")
+
+    print("round-trip min/avg/max/stddev = ", vars)
+    #print("round-trip min/avg/max/stddev =", minDelay, "/", avg, "/", maxDelay, "/", dev, "ms")
+
+    #print("round-trip min/avg/max/stddev = " + str(minDelay) + "/" + str(avg) + "/" + str(maxDelay) + "/" + str(dev) + " ms")
 
     return vars
 
