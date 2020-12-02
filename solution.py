@@ -72,7 +72,6 @@ def build_packet():
     packet = header + data
     return packet
 
-
 def get_route(hostname):
     timeLeft = TIMEOUT
     tracelist1 = []  # This is your list to use when iterating through each trace
@@ -83,14 +82,17 @@ def get_route(hostname):
     # tl1 initialized on every iteration, but tl2 does not -just gets built as you go through the loop
     # end is you return tl2 which is an array of all the data
 
-
     for ttl in range(1, MAX_HOPS):
         for tries in range(TRIES):
+
             destAddr = gethostbyname(hostname)
+            #print("dest = " + str(hostname))
+            #print("addr = " + str(getaddrinfo((hostname))))
 
             # Fill in start
             # Make a raw socket named mySocket
             tracelist1 = []
+
             icmp = getprotobyname("icmp")
             mySocket = socket(AF_INET, SOCK_RAW, icmp)
 
@@ -98,6 +100,7 @@ def get_route(hostname):
 
             mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
             mySocket.settimeout(TIMEOUT)
+
             try:
                 d = build_packet()
                 mySocket.sendto(d, (hostname, 0))
@@ -105,6 +108,7 @@ def get_route(hostname):
                 startedSelect = time.time()
                 whatReady = select.select([mySocket], [], [], timeLeft)
                 howLongInSelect = (time.time() - startedSelect)
+
                 if whatReady[0] == []:  # Timeout
                     #tracelist1.append("* * * Request timed out.")
                     # Fill in start
@@ -129,9 +133,11 @@ def get_route(hostname):
                     tracelist2.append(tracelist1)
 
             except timeout:
+
                 continue
 
             else:
+
                 # Fill in start
                 icmpheader = recvPacket[20:28]
                 types, code, checksum, pktid, sequence = struct.unpack("bbHHh", icmpheader)
@@ -140,10 +146,10 @@ def get_route(hostname):
                 # Fill in end
                 try:  # try to fetch the hostname
                     # Fill in start
-                    recvPacket, addr = mySocket.recvfrom(1024)
-                    pktHostname = gethostbyaddr(addr)[0]
+                    #recvPacket, addr = mySocket.recvfrom(1024)
+                    pktHostname = gethostbyaddr(str(addr[0]))
 
-                # Fill in end
+                    # Fill in end
                 except herror:  # if the host does not provide a hostname
                     # Fill in start
                     pktHostname = "hostname not returnable"
@@ -154,8 +160,9 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     # Fill in start
                     tracelist1.append(str(ttl))
-                    tracelist1.append(str(timeReceived-t)+"ms")
-                    tracelist1.append(str(addr))
+                    rtt = (round((timeReceived - t)*1000))
+                    tracelist1.append(str(rtt) + "ms")
+                    tracelist1.append(str(addr[0]))
                     tracelist1.append(str(pktHostname))
                     tracelist2.append(tracelist1)
                     # You should add your responses to your lists here
@@ -165,8 +172,9 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     # Fill in start
                     tracelist1.append(str(ttl))
-                    tracelist1.append(str(timeReceived - t) + "ms")
-                    tracelist1.append(str(addr))
+                    rtt = (round((timeReceived - t)*1000))
+                    tracelist1.append(str(rtt) + "ms")
+                    tracelist1.append(str(addr[0]))
                     tracelist1.append(str(pktHostname))
                     tracelist2.append(tracelist1)
                     # You should add your responses to your lists here
@@ -176,8 +184,9 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     # Fill in start
                     tracelist1.append(str(ttl))
-                    tracelist1.append(str(timeReceived-t)+"ms")
-                    tracelist1.append(str(addr))
+                    rtt = (round((timeReceived - t)*1000))
+                    tracelist1.append(str(rtt) + "ms")
+                    tracelist1.append(str(addr[0]))
                     tracelist1.append(str(pktHostname))
                     tracelist2.append(tracelist1)
                     #print(tracelist2)
