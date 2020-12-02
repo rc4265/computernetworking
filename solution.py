@@ -147,7 +147,7 @@ def get_route(hostname):
                 try:  # try to fetch the hostname
                     # Fill in start
                     #recvPacket, addr = mySocket.recvfrom(1024)
-                    pktHostname = gethostbyaddr(str(addr[0]))
+                    pktHostname = gethostbyaddr(str(addr[0]))[0]
 
                     # Fill in end
                 except herror:  # if the host does not provide a hostname
